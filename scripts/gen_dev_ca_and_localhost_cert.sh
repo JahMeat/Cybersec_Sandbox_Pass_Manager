@@ -30,9 +30,6 @@ openssl x509 -req -in certs/localhost.csr \
 
 echo "Generated certs in ./certs:"
 ls -1 certs/dev_ca.crt certs/localhost.crt certs/localhost.key
-echo ""
-echo "CLI test (no browser trust needed):"
-echo "  curl --cacert certs/dev_ca.crt https://localhost:5000"
 
 # Run it using the command below:
 # chmod +x scripts/gen_dev_ca_and_localhost_cert.sh
