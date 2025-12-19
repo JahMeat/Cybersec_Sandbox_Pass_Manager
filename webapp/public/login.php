@@ -1,12 +1,20 @@
 <?php
 
-// Harden session cookie with Secure, HttpOnly, and SameSite flags
-$cookieParams = session_get_cookie_params();
+// Detect HTTPS (supports reverse proxy that sets X-Forwarded-Proto)
+$isHttps =
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_only_cookies', '1');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.cookie_secure', $isHttps ? '1' : '0');
+
 session_set_cookie_params([
-    'lifetime' => $cookieParams['lifetime'],
-    'path'     => $cookieParams['path'],
-    'domain'   => $cookieParams['domain'],
-    'secure'   => true,
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => $isHttps,
     'httponly' => true,
     'samesite' => 'Lax',
 ]);
